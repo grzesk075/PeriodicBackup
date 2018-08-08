@@ -21,6 +21,7 @@ def parse_config():
     config = configparser.ConfigParser()
     config.read('periodic_backup.ini')
 
+    global period
     period = config['params']['period']
     if period not in PERIODS:
         raise Exception("Config param 'period' must be in " + str(PERIODS) + " but is '" + period + "'.")
@@ -29,9 +30,8 @@ def parse_config():
 def assign_backup_file():
     import datetime
     now = datetime.datetime.now()
-    day = '_' + now.day if period == 'day' else ''
-    file_name = 'backup_{0}_{1}{2}.zip'.format(now.year, now.month, day)
-    print(file_name)
+    day = '_{:02}'.format(now.day) if period == 'day' else ''
+    file_name = 'backup_{0}_{1:02}{2}.zip'.format(now.year, now.month, day)
 
 
 def print_usage():
