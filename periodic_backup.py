@@ -5,6 +5,8 @@ Python3 tool for making data backups in zip files and copying them to indicated 
 Source folders or files to copy along with destination folders for zip backup file
 and placed in periodic_backup.ini config file.
 This tool creates and overwrites one backup file per configured period (the default is a month).
+Primary zip file is created in working directory next to ini file.
+The name of directory should describe the purpose and content of copy.
 """
 
 __version__ = '1.0.0'
@@ -24,6 +26,14 @@ def parse_config():
         raise Exception("Config param 'period' must be in " + str(PERIODS) + " but is '" + period + "'.")
 
 
+def assign_backup_file():
+    import datetime
+    now = datetime.datetime.now()
+    day = '_' + now.day if period == 'day' else ''
+    file_name = 'backup_{0}_{1}{2}.zip'.format(now.year, now.month, day)
+    print(file_name)
+
+
 def print_usage():
     print(__doc__)
     print()
@@ -32,3 +42,4 @@ def print_usage():
 # main
 print_usage()
 parse_config()
+assign_backup_file()
