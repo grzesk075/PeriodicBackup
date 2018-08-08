@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import os
+
 """
 Python3 tool for making data backups in zip files and copying them to indicated folders.
 Source folders or files to copy along with destination folders for zip backup file
@@ -15,6 +17,9 @@ __author__ = 'Grzegorz Kuprianowicz <grzesk075@gmail.com>'
 # config
 PERIODS = ['day', 'month']
 period = None
+
+# Primary zip file absolute path
+backupFilePath = None
 
 def parse_config():
     import configparser
@@ -32,6 +37,9 @@ def assign_backup_file():
     now = datetime.datetime.now()
     day = '_{:02}'.format(now.day) if period == 'day' else ''
     file_name = 'backup_{0}_{1:02}{2}.zip'.format(now.year, now.month, day)
+
+    global backupFilePath
+    backupFilePath = os.path.abspath(file_name)  # in working dir
 
 
 def print_usage():
