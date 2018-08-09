@@ -51,24 +51,24 @@ def assign_backup_file():
     backupFilePath = os.path.abspath(file_name)  # in working dir
 
 
+def get_paths_from_pattern(patterns):
+    import glob
+    paths = []
+    for pattern in patterns.split(','):
+        paths.extend(glob.glob(pattern, recursive=True))
+    return paths
+
 def zip_files():
-    import glob, zipfile
-
-    includes_paths = []
-    for pattern in includes.split(','):
-        includes_paths.append(glob.glob(pattern, recursive=True))
-
-    excludes_paths = []
-    for pattern in excludes.split(','):
-        excludes_paths.append(glob.glob(pattern, recursive=True))
-
+    import zipfile
+    includes_paths = get_paths_from_pattern(includes)
+    excludes_paths = get_paths_from_pattern(excludes)
     print('Open archive ' + backupFilePath)
     with zipfile.ZipFile(backupFilePath, 'w') as zip_file:
         for file_path in includes_paths:
             if file_path in excludes_paths:
-                print('Exclude' + file_path)
+                print('Exclude ' + file_path)
                 continue
-            print('Add' + file_path)
+            print('Add ' + file_path)
             zip_file.write(file_path)
 
 
