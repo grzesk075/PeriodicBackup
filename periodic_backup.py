@@ -17,19 +17,28 @@ __author__ = 'Grzegorz Kuprianowicz <grzesk075@gmail.com>'
 # config
 PERIODS = ['day', 'month']
 period = None
+includes = None
+excludes = None
+copydirs = None
 
 # Primary zip file absolute path
 backupFilePath = None
+
 
 def parse_config():
     import configparser
     config = configparser.ConfigParser()
     config.read('periodic_backup.ini')
 
-    global period
+    global period, includes, excludes, copydirs
+
     period = config['params']['period']
     if period not in PERIODS:
         raise Exception("Config param 'period' must be in " + str(PERIODS) + " but is '" + period + "'.")
+
+    includes = config['input']['includes']
+    excludes = config['input']['excludes']
+    copydirs = config['output']['copydirs']
 
 
 def assign_backup_file():
@@ -42,6 +51,27 @@ def assign_backup_file():
     backupFilePath = os.path.abspath(file_name)  # in working dir
 
 
+def zip_files():
+    import glob, zipfile
+
+    includes_paths = []
+    for pattern in includes.split(','):
+        includes_paths.append(glob.glob(pattern, recursive=True))
+
+    excludes_paths = []
+    for pattern in excludes.split(','):
+        excludes_paths.append(glob.glob(pattern, recursive=True))
+
+    print('Open archive ' + backupFilePath)
+    with zipfile.ZipFile(backupFilePath, 'w') as zip_file:
+        for file_path in includes_paths:
+            if file_path in excludes_paths:
+                print('Exclude' + file_path)
+                continue
+            print('Add' + file_path)
+            zip_file.write(file_path)
+
+
 def print_usage():
     print(__doc__)
     print()
@@ -51,3 +81,4 @@ def print_usage():
 print_usage()
 parse_config()
 assign_backup_file()
+zip_files()
