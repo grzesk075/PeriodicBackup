@@ -1,7 +1,5 @@
 #!/usr/bin/python
 
-import os
-
 """
 Python3 tool for making data backups in zip files and copying them to indicated folders.
 Source folders or files to copy along with destination folders for zip backup file
@@ -13,6 +11,8 @@ The name of directory should describe the purpose and content of copy.
 
 __version__ = '1.0.0'
 __author__ = 'Grzegorz Kuprianowicz <grzesk075@gmail.com>'
+
+import os
 
 # config
 PERIODS = ['day', 'month']
@@ -74,7 +74,6 @@ def zip_files():
 
 def print_usage():
     print(__doc__)
-    print()
 
 
 # main
