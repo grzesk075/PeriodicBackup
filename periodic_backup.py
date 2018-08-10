@@ -72,6 +72,15 @@ def zip_files():
             zip_file.write(file_path)
 
 
+def copy_backup():
+    if not copydirs:
+        return
+    from shutil import copy
+    for dir in copydirs.split(','):
+        print('Copy {} to {}'.format(backupFilePath, dir))
+        copy(backupFilePath, dir)
+
+
 def print_usage():
     print(__doc__)
 
@@ -81,3 +90,4 @@ print_usage()
 parse_config()
 assign_backup_file()
 zip_files()
+copy_backup()
