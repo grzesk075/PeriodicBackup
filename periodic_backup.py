@@ -58,6 +58,7 @@ def get_paths_from_pattern(patterns):
         paths.extend(glob.glob(pattern, recursive=True))
     return paths
 
+
 def zip_files():
     import zipfile
     includes_paths = get_paths_from_pattern(includes)
